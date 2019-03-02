@@ -1,41 +1,55 @@
 const path = require('path');
+const webpack = require('webpack');
+const HTMLWebpackPlugins = require('html-webpack-plugin');
 
 module.exports = {
   mode: 'development',
   entry: {
-    main: './src/main.js'
+    main: './src/main.js',
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name]_bundle.js',
-    publicPath: ''
+    publicPath: '',
   },
   devServer: {
     contentBase: 'dist',
     host: 'localhost',
-    port: 8080,
+    port: 9000,
+    stats: {
+      colors: true,
+    },
     overlay: {
       errors: true,
-      warnings: true
+      warnings: false,
     },
-    compress: false
+    compress: false,
   },
   watch: true,
   module: {
     rules: [
       {
+        test: /\.js$/,
+        use: [
+          {
+            loader: 'babel-loader',
+          },
+        ],
+        exclude: /node_modules/,
+      },
+      {
         test: /\.html$/,
         use: [
           {
-            // resolves require() on a file into a url and emits the file into the output
+            // resolves require() on a file into a url and emits  file into the output
             loader: 'file-loader',
             options: {
-              name: '[name].html'
-            }
+              name: '[name].html',
+            },
           },
           {
             // keep file separate from the main bundle
-            loader: 'extract-loader'
+            loader: 'extract-loader',
           },
           {
             // exports HTML as string.
@@ -43,10 +57,10 @@ module.exports = {
             options: {
               minimize: false,
               // for images, target the attribute src in img tag
-              attrs: ['img:src']
-            }
-          }
-        ]
+              attrs: ['img:src'],
+            },
+          },
+        ],
       },
       {
         test: /\.(png|jpg|svg)$/,
@@ -54,28 +68,50 @@ module.exports = {
           {
             loader: 'file-loader',
             options: {
-              name: 'img/[name]_[hash:8].[ext]'
-            }
-          }
-        ]
+              name: 'img/[name].[ext]',
+            },
+          },
+        ],
       },
       {
         test: /\.less$/,
         use: [
           {
             // creates style nodes from JS strings
-            loader: 'style-loader'
+            loader: 'style-loader',
           },
           {
             // translates CSS into CommonJS
-            loader: 'css-loader'
+            loader: 'css-loader',
           },
           {
             // compiles Less to CSS
-            loader: 'less-loader'
-          }
-        ]
-      }
-    ]
-  }
+            loader: 'less-loader',
+          },
+        ],
+      },
+      {
+        test: /\.hbs$/,
+        use: [
+          {
+            loader: 'handlebars-loader',
+            // render images
+            query: {
+              inlineRequires: '/img/',
+            },
+          },
+        ],
+      },
+    ],
+  },
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NamedModulesPlugin(),
+    new HTMLWebpackPlugins({
+      template: './src/index.hbs',
+      // variables
+      title: 'Hello Webpack',
+      header: 'Hello Webpack.',
+    }),
+  ],
 };
