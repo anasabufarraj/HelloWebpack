@@ -1,11 +1,11 @@
 const path = require('path');
-const webpack = require('webpack');
 const HTMLWebpackPlugins = require('html-webpack-plugin');
 
 module.exports = {
   mode: 'development',
   entry: {
     main: './src/main.js',
+    script: './src/script.ts',
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -15,7 +15,7 @@ module.exports = {
   devServer: {
     contentBase: 'dist',
     host: 'localhost',
-    port: 9000,
+    port: 8080,
     stats: {
       colors: true,
     },
@@ -26,6 +26,7 @@ module.exports = {
     compress: false,
   },
   watch: true,
+  devtool: 'source-map',
   module: {
     rules: [
       {
@@ -38,37 +39,46 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
-        test: /\.html$/,
+        test: /\.ts$/,
         use: [
           {
-            // resolves require() on a file into a url and emits  file into the output
-            loader: 'file-loader',
-            options: {
-              name: '[name].html',
-            },
-          },
-          {
-            // keep file separate from the main bundle
-            loader: 'extract-loader',
-          },
-          {
-            // exports HTML as string.
-            loader: 'html-loader',
-            options: {
-              minimize: false,
-              // for images, target the attribute src in img tag
-              attrs: ['img:src'],
-            },
+            loader: 'ts-loader',
           },
         ],
+        exclude: /node_modules/,
       },
+      // {
+      //   test: /\.html$/,
+      //   use: [
+      //     {
+      //       // resolves require() on a file into a url and emits  file into the output
+      //       loader: 'file-loader',
+      //       options: {
+      //         name: '[name].html',
+      //       },
+      //     },
+      //     {
+      //       // keep file separate from the main bundle
+      //       loader: 'extract-loader',
+      //     },
+      //     {
+      //       // exports HTML as string.
+      //       loader: 'html-loader',
+      //       options: {
+      //         minimize: false,
+      //         // for images, target the attribute src in img tag
+      //         attrs: ['img:src'],
+      //       },
+      //     },
+      //   ],
+      // },
       {
         test: /\.(png|jpg|svg)$/,
         use: [
           {
             loader: 'file-loader',
             options: {
-              name: 'img/[name].[ext]',
+              name: 'img/[name]_[hash:8].[ext]',
             },
           },
         ],
@@ -105,8 +115,6 @@ module.exports = {
     ],
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NamedModulesPlugin(),
     new HTMLWebpackPlugins({
       template: './src/index.hbs',
       // variables

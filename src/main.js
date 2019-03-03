@@ -3,7 +3,6 @@
 // 22 Feb 2019
 
 require('./css/style.less');
-require('../trash/index.html');
 
 // const jQuery = require('jquery');
 
