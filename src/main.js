@@ -5,7 +5,7 @@
 require('./css/style.less');
 
 // const jQuery = require('jquery');
-
+//
 // jQuery(document).ready(() => {
 //   jQuery('footer small').text('Ready to Manipulate!');
 //   jQuery('#rect')
