@@ -7,4 +7,3 @@ function greeting(msg: string) {
 }
 
 greeting('Hello from TypeScript');
-greeting('42');

@@ -26,3 +26,8 @@ require('./css/style.less');
 // });
 
 // --- EOC --->
+function foo(x, y, ...z) {
+  console.log(x, y, z);
+}
+
+foo(1);
