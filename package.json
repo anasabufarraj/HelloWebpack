@@ -1,5 +1,5 @@
 {
-  "name": "hellowebpack",
+  "name": "hello_webpack",
   "version": "1.0.0",
   "description": "Learning Webpack building tool",
   "main": "main.js",
